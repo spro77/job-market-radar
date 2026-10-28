@@ -13,6 +13,7 @@ Each record captures one decision: the context, what we chose, what we rejected 
 | 0007 | [Biome for formatting and linting](0007-biome.md)                                         | Accepted |
 | 0008 | [Dark-first design system on shadcn/ui, Radix and D3](0008-design-system-and-ui-stack.md) | Accepted |
 | 0009 | [Build in GitHub Actions, deploy the prebuilt app](0009-ci-build-and-prebuilt-deploy.md) | Accepted |
+| 0010 | [Reference and macro data sources](0010-reference-and-macro-data-sources.md) | Accepted |
 
 ## Template
 
