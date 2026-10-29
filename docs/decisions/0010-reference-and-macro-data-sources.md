@@ -12,16 +12,16 @@ Job postings from company ATS boards (Greenhouse, Lever, Ashby) show what employ
 
 Add these sources, all open and free:
 
-| Source | What we use | Phase |
-| --- | --- | --- |
-| Bank of Canada Valet API | Daily USD/CAD rate to convert salaries; JSON, no key | MVP |
-| O*NET Technology Skills, Hot Technologies | Seed skill dictionary with names, categories and demand flags | MVP |
-| Indeed Hiring Lab job postings tracker | Daily index of Indeed posting volume (100 = 1 February 2020) for Canada, provinces and sectors including software development; CSV, CC BY 4.0 | MVP |
-| BLS Occupational Employment and Wage Statistics | Official US wages by occupation and state, to check our posted salaries | Later |
-| BLS JOLTS | US openings, hires and layoffs by industry, as context for the layoffs view | Later |
-| Statistics Canada Job Vacancy and Wage Survey | Canadian vacancies and offered wages by province and industry | Later |
-| Stack Overflow Developer Survey | Self-reported pay by country and technology, to compare with posted pay; ODbL | Later |
-| Hacker News "Who is hiring?" threads | Extra startup postings through the official Hacker News API, parsed with an LLM | Later |
+| Source                                          | What we use                                                                                                                                   | Phase |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| Bank of Canada Valet API                        | Daily USD/CAD rate to convert salaries; JSON, no key                                                                                          | MVP   |
+| O*NET Technology Skills, Hot Technologies       | Seed skill dictionary with names, categories and demand flags                                                                                 | MVP   |
+| Indeed Hiring Lab job postings tracker          | Daily index of Indeed posting volume (100 = 1 February 2020) for Canada, provinces and sectors including software development; CSV, CC BY 4.0 | MVP   |
+| BLS Occupational Employment and Wage Statistics | Official US wages by occupation and state, to check our posted salaries                                                                       | Later |
+| BLS JOLTS                                       | US openings, hires and layoffs by industry, as context for the layoffs view                                                                   | Later |
+| Statistics Canada Job Vacancy and Wage Survey   | Canadian vacancies and offered wages by province and industry                                                                                 | Later |
+| Stack Overflow Developer Survey                 | Self-reported pay by country and technology, to compare with posted pay; ODbL                                                                 | Later |
+| Hacker News "Who is hiring?" threads            | Extra startup postings through the official Hacker News API, parsed with an LLM                                                               | Later |
 
 Each source keeps its own adapter and raw storage, like the ATS sources.
 
