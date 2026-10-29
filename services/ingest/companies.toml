@@ -1,0 +1,14 @@
+# Companies we collect jobs from. Changes here go through review like code.
+#
+# name        display name
+# slug        stable id in URLs and in the companies table
+# ats         greenhouse | lever | ashby
+# token       the company's board id in that ATS
+# hq_country  ISO 3166-1 alpha-2
+
+[[company]]
+name = "Stripe"
+slug = "stripe"
+ats = "greenhouse"
+token = "stripe"
+hq_country = "US"

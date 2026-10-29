@@ -164,7 +164,8 @@ CREATE TABLE public.raw_postings (
     company_id bigint NOT NULL,
     payload jsonb NOT NULL,
     payload_hash text NOT NULL,
-    fetched_at timestamp with time zone DEFAULT now() NOT NULL
+    changed_at timestamp with time zone DEFAULT now() NOT NULL,
+    last_seen_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -335,4 +336,5 @@ ALTER TABLE ONLY public.raw_postings
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20261029013941');
+    ('20261029013941'),
+    ('20261029040819');
