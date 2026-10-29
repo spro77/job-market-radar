@@ -15,6 +15,7 @@ Each record captures one decision: the context, what we chose, what we rejected 
 | 0009 | [Build in GitHub Actions, deploy the prebuilt app](0009-ci-build-and-prebuilt-deploy.md) | Accepted |
 | 0010 | [Reference and macro data sources](0010-reference-and-macro-data-sources.md) | Accepted |
 | 0011 | [SQL-first schema: dbmate migrations, Kysely for queries](0011-sql-first-schema-dbmate-kysely.md) | Accepted |
+| 0012 | [Python for ingestion: uv, ruff, psycopg, httpx](0012-python-ingestion-tooling.md) | Accepted |
 
 ## Template
 

@@ -31,15 +31,22 @@ apps/
   web/            React app with the dashboards
 packages/
   ui/             @radar/ui: design tokens, shared components
+services/
+  ingest/         Python: fetches job boards into Postgres
+db/
+  migrations/     SQL migrations (dbmate)
+  schema.sql      current schema, generated
 docs/
   decisions/      architecture decision records
 ```
 
-Planned: `apps/api` (Azure Functions), `services/ingest` (data collection), `packages/schema` (shared types).
+Planned: `apps/api` (Azure Functions) and `packages/schema` (shared types).
 
 ## Getting started
 
-Requirements: Node.js 22 or newer and pnpm. The pnpm version is pinned in `package.json`, and pnpm switches to it automatically.
+Requirements: Node.js 22 or newer and pnpm (the pnpm version is pinned in `package.json`, and pnpm switches to it automatically). For the database and ingestion: [uv](https://docs.astral.sh/uv/) and `pg_dump` 18 or newer.
+
+Copy `.env.example` to `.env` and set `DATABASE_URL` to a PostgreSQL connection string (Neon: Connect → Connection pooling off).
 
 ```bash
 pnpm install
