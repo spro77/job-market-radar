@@ -17,6 +17,7 @@ Job Market Radar: dashboards of the tech job market in Canada and the US, built 
 ## Layout
 
 - `apps/web` — React + TypeScript + Vite app (`@radar/web`).
+- `apps/api` — `@radar/api`: read-only HTTP API over `daily_aggregates` on Azure Functions (v4 model) and Kysely. `src/db/types.ts` is generated; settings in `local.settings.json` (git-ignored, copy from `local.settings.example.json`, Neon pooled URL).
 - `packages/ui` — `@radar/ui`: design tokens (`src/tokens.css`) and shared components. Exports TypeScript source; no build step.
 - `services/ingest` — Python 3.12 package `radar_ingest` (uv, psycopg 3, httpx): fetches job boards into Postgres.
 - `db/migrations` — SQL migrations run by dbmate; `db/schema.sql` is generated, never edited by hand.
@@ -30,6 +31,8 @@ Run from the repository root:
 - `pnpm check` — Biome format and lint check; run before committing.
 - `pnpm --filter @radar/web <script>` — run a script in one package.
 - `pnpm db:new <name>` · `pnpm db:up` · `pnpm db:rollback` · `pnpm db:status` — dbmate migrations, using `DATABASE_URL` from `.env`.
+- `pnpm --filter @radar/api db:types` — regenerate `apps/api/src/db/types.ts` from the database. **Run it after every migration** and commit the file: CI builds without a database.
+- `pnpm --filter @radar/api dev` — build and run the API on `localhost:7071` (needs Azure Functions Core Tools, `func`).
 - In `services/ingest`: `uv run python -m radar_ingest.check` · `uv run ruff check` · `uv run ruff format` · `uv run pytest`.
 
 ## Conventions

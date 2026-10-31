@@ -162,3 +162,6 @@ __pycache__/
 .coverage
 htmlcov/
 *.egg-info/
+
+# Azure Functions local settings hold DATABASE_URL
+local.settings.json
