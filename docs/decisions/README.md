@@ -18,6 +18,7 @@ Each record captures one decision: the context, what we chose, what we rejected 
 | 0012 | [Python for ingestion: uv, ruff, psycopg, httpx](0012-python-ingestion-tooling.md)                | Accepted |
 | 0013 | [Fetch whole boards, detect changes by hash](0013-full-board-fetch-with-change-detection.md)      | Accepted |
 | 0014 | [One adapter module per job board source](0014-source-adapters.md)                                | Accepted |
+| 0015 | [Dictionary skill extraction first, with known limits](0015-dictionary-skill-extraction.md)       | Accepted |
 
 ## Template
 

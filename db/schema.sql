@@ -51,6 +51,40 @@ ALTER TABLE public.companies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: daily_aggregates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.daily_aggregates (
+    id bigint NOT NULL,
+    day date NOT NULL,
+    metric text NOT NULL,
+    dimension text NOT NULL,
+    key text NOT NULL,
+    country character(2),
+    value numeric NOT NULL,
+    sample_size integer NOT NULL,
+    companies integer,
+    CONSTRAINT daily_aggregates_companies_check CHECK ((companies > 0)),
+    CONSTRAINT daily_aggregates_country_check CHECK ((country = ANY (ARRAY['CA'::bpchar, 'US'::bpchar]))),
+    CONSTRAINT daily_aggregates_sample_size_check CHECK ((sample_size > 0))
+);
+
+
+--
+-- Name: daily_aggregates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.daily_aggregates ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.daily_aggregates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: fetch_runs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -247,6 +281,22 @@ ALTER TABLE ONLY public.companies
 
 
 --
+-- Name: daily_aggregates daily_aggregates_day_metric_dimension_key_country_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.daily_aggregates
+    ADD CONSTRAINT daily_aggregates_day_metric_dimension_key_country_key UNIQUE NULLS NOT DISTINCT (day, metric, dimension, key, country);
+
+
+--
+-- Name: daily_aggregates daily_aggregates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.daily_aggregates
+    ADD CONSTRAINT daily_aggregates_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: fetch_runs fetch_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -438,4 +488,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20261029013941'),
     ('20261029040819'),
     ('20261031043512'),
-    ('20261031051548');
+    ('20261031051548'),
+    ('20261031073634');
