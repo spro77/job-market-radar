@@ -31,8 +31,9 @@ def migrate_up(cur: psycopg.Cursor) -> None:
         cur.execute(up)  # several statements, no parameters: psycopg allows that
 
 
-# Two companies, six jobs. acme is in Canada; globex in the US; job 3 is in both countries;
-# job 6 closed before the day. Midpoints: 110k and 150k CAD, 160k USD; job 5 is hourly.
+# Two companies, six jobs. acme is in Canada; globex in the US; job 3 is in both countries
+# with a CAD range; job 6 closed before the day. Yearly midpoints: 110k, 150k and 100k CAD,
+# 160k USD; job 5 is hourly.
 DATA = """
     insert into companies (name, slug, ats, ats_token) values
       ('Acme', 'acme', 'ashby', 'acme'), ('Globex', 'globex', 'greenhouse', 'globex');
@@ -47,8 +48,8 @@ DATA = """
         'structured', '2026-10-01', '2026-10-31', null),
       (2, 1, 'ashby', '2', 'Backend Engineer', 'onsite', 140000, 160000, 'CAD', 'year',
         'structured', '2026-10-01', '2026-10-31', null),
-      (3, 1, 'ashby', '3', 'Frontend Engineer', 'hybrid', null, null, null, null,
-        'none', '2026-10-01', '2026-10-31', null),
+      (3, 1, 'ashby', '3', 'Frontend Engineer', 'hybrid', 90000, 110000, 'CAD', 'year',
+        'structured', '2026-10-01', '2026-10-31', null),
       (4, 2, 'greenhouse', '4', 'ML Engineer', 'remote', 150000, 170000, 'USD', 'year',
         'structured', '2026-10-01', '2026-10-31', null),
       (5, 2, 'greenhouse', '5', 'Analyst', 'unknown', 40, 50, 'USD', 'hour',
@@ -109,10 +110,19 @@ def test_skill_share_and_companies_differ(cur: psycopg.Cursor) -> None:
 
 
 def test_salary_quartiles_are_yearly_per_currency(cur: psycopg.Cursor) -> None:
-    assert value(cur, "salary_median", "CAD") == (130000, 2, 1)
-    assert value(cur, "salary_p25", "CAD") == (120000, 2, 1)
+    assert value(cur, "salary_median", "CAD") == (110000, 3, 1)
+    assert value(cur, "salary_p25", "CAD") == (105000, 3, 1)
     assert value(cur, "salary_median", "USD") == (160000, 1, 1)  # hourly job 5 left out
     assert value(cur, "salary_median", "CA/ON/CAD") == (130000, 2, 1)
+
+
+def test_salary_currency_ties_it_to_a_country(cur: psycopg.Cursor) -> None:
+    # Job 3's CAD range describes Quebec, not New York.
+    assert value(cur, "salary_median", "CA/QC/CAD") == (100000, 1, 1)
+    keys = cur.execute(
+        "select distinct key from daily_aggregates where metric = 'salary_median'"
+    ).fetchall()
+    assert ("US/CAD",) not in keys and ("US/NY/CAD",) not in keys
 
 
 def test_rerun_gives_the_same_rows(cur: psycopg.Cursor) -> None:

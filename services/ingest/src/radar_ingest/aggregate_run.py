@@ -21,12 +21,15 @@ METHOD = "dictionary"  # which extractor's skills feed the dashboards
 
 # One row per (job, country, region) in CA or US; a job in several places has several rows,
 # so every metric counts distinct job_id. salary is the yearly midpoint, null otherwise:
-# hourly pay is not mixed with yearly, and currencies are not converted.
+# hourly pay is not mixed with yearly, and currencies are not converted. The currency ties a
+# salary to its country (ADR 0016): CAD describes only Canadian locations, USD only US ones,
+# so a CAD range on a job in both countries counts as no salary in the US.
 AGG_JOBS = """
     create temp table agg_jobs on commit drop as
     select distinct
       j.id as job_id, j.company_id, c.slug as company, l.country, l.region, j.workplace_type,
       case when j.salary_period = 'year'
+        and (j.salary_currency, l.country) in (('CAD', 'CA'), ('USD', 'US'))
         then (coalesce(j.salary_min, j.salary_max) + coalesce(j.salary_max, j.salary_min)) / 2
       end as salary,
       j.salary_currency as currency
@@ -57,9 +60,9 @@ OPEN_JOBS = f"""{INSERT}
     group by dimension, key
 """
 
-# Share of all open jobs stated as remote. unknown stays in the denominator: Greenhouse has
-# no workplace field, so only "Remote" in its location text is ever known, and dropping
-# unknown would leave mostly remote jobs (0.91 in the US on 2026-10-31).
+# Share of all open jobs stated as remote (ADR 0016). unknown stays in the denominator:
+# Greenhouse has no workplace field, so only "Remote" in its location text is ever known, and
+# dropping unknown would leave mostly remote jobs (0.91 in the US on 2026-10-31).
 REMOTE_SHARE = f"""{INSERT}
     select %(day)s, 'remote_share', dimension, key, null,
       round(count(distinct job_id) filter (where workplace_type = 'remote')::numeric

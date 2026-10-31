@@ -50,7 +50,10 @@ jobs:
       - run: uv sync --locked
       - run: uv run ruff check
       - run: uv run ruff format --check
+      # A Neon dev branch for tests/test_aggregate_run.py; they are skipped when it is empty.
       - run: uv run pytest
+        env:
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
   deploy:
     needs: check
