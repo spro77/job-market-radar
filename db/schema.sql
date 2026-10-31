@@ -110,6 +110,19 @@ ALTER TABLE public.job_locations ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTIT
 
 
 --
+-- Name: job_skills; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.job_skills (
+    job_id bigint NOT NULL,
+    skill_id bigint NOT NULL,
+    method text NOT NULL,
+    confidence real,
+    CONSTRAINT job_skills_method_check CHECK ((method = ANY (ARRAY['dictionary'::text, 'ml'::text, 'llm'::text])))
+);
+
+
+--
 -- Name: jobs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -133,6 +146,7 @@ CREATE TABLE public.jobs (
     last_seen_at timestamp with time zone NOT NULL,
     closed_at timestamp with time zone,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    skills_extracted_at timestamp with time zone,
     CONSTRAINT jobs_check CHECK ((salary_min <= salary_max)),
     CONSTRAINT jobs_check1 CHECK (((salary_source <> 'none'::text) OR ((salary_min IS NULL) AND (salary_max IS NULL)))),
     CONSTRAINT jobs_salary_min_check CHECK ((salary_min >= (0)::numeric)),
@@ -181,6 +195,34 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: skills; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.skills (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    slug text NOT NULL,
+    category text NOT NULL,
+    aliases text[] DEFAULT '{}'::text[] NOT NULL,
+    CONSTRAINT skills_category_check CHECK ((category = ANY (ARRAY['language'::text, 'framework'::text, 'library'::text, 'cloud'::text, 'database'::text, 'tool'::text, 'platform'::text, 'practice'::text])))
+);
+
+
+--
+-- Name: skills_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.skills ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.skills_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: companies companies_ats_ats_token_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -221,6 +263,14 @@ ALTER TABLE ONLY public.job_locations
 
 
 --
+-- Name: job_skills job_skills_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.job_skills
+    ADD CONSTRAINT job_skills_pkey PRIMARY KEY (job_id, skill_id, method);
+
+
+--
 -- Name: jobs jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -253,6 +303,30 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: skills skills_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.skills
+    ADD CONSTRAINT skills_name_key UNIQUE (name);
+
+
+--
+-- Name: skills skills_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.skills
+    ADD CONSTRAINT skills_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: skills skills_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.skills
+    ADD CONSTRAINT skills_slug_key UNIQUE (slug);
+
+
+--
 -- Name: fetch_runs_company_started_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -278,6 +352,13 @@ CREATE INDEX job_locations_job_id_idx ON public.job_locations USING btree (job_i
 --
 
 CREATE UNIQUE INDEX job_locations_one_primary_idx ON public.job_locations USING btree (job_id) WHERE is_primary;
+
+
+--
+-- Name: job_skills_skill_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX job_skills_skill_id_idx ON public.job_skills USING btree (skill_id);
 
 
 --
@@ -311,6 +392,22 @@ ALTER TABLE ONLY public.job_locations
 
 
 --
+-- Name: job_skills job_skills_job_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.job_skills
+    ADD CONSTRAINT job_skills_job_id_fkey FOREIGN KEY (job_id) REFERENCES public.jobs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: job_skills job_skills_skill_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.job_skills
+    ADD CONSTRAINT job_skills_skill_id_fkey FOREIGN KEY (skill_id) REFERENCES public.skills(id);
+
+
+--
 -- Name: jobs jobs_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -340,4 +437,5 @@ ALTER TABLE ONLY public.raw_postings
 INSERT INTO public.schema_migrations (version) VALUES
     ('20261029013941'),
     ('20261029040819'),
-    ('20261031043512');
+    ('20261031043512'),
+    ('20261031051548');

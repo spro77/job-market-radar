@@ -1,0 +1,685 @@
+# Skills we extract from job descriptions. Changes here go through review like code.
+#
+# name            canonical name, shown in the product; the slug is derived from it
+# category        language | framework | library | cloud | database | tool | platform | practice
+# aliases         other spellings, matched case-insensitively (short all-caps ones like ML exactly)
+# case_sensitive  match the name only as written: Go, not the verb go
+
+[[skill]]
+name = "Python"
+category = "language"
+
+[[skill]]
+name = "Java"
+category = "language"
+
+[[skill]]
+name = "JavaScript"
+category = "language"
+aliases = ["ecmascript"]
+
+[[skill]]
+name = "TypeScript"
+category = "language"
+
+[[skill]]
+name = "Go"
+category = "language"
+aliases = ["golang"]
+case_sensitive = true
+
+[[skill]]
+name = "Rust"
+category = "language"
+
+[[skill]]
+name = "C++"
+category = "language"
+aliases = ["cpp"]
+
+[[skill]]
+name = "C#"
+category = "language"
+aliases = ["csharp"]
+
+[[skill]]
+name = "Ruby"
+category = "language"
+
+[[skill]]
+name = "PHP"
+category = "language"
+
+[[skill]]
+name = "Kotlin"
+category = "language"
+
+[[skill]]
+name = "Swift"
+category = "language"
+case_sensitive = true
+
+[[skill]]
+name = "Scala"
+category = "language"
+
+[[skill]]
+name = "SQL"
+category = "language"
+
+[[skill]]
+name = "Bash"
+category = "language"
+aliases = ["shell scripting"]
+
+[[skill]]
+name = "Elixir"
+category = "language"
+
+[[skill]]
+name = "Dart"
+category = "language"
+
+[[skill]]
+name = "Objective-C"
+category = "language"
+aliases = ["objc"]
+
+[[skill]]
+name = "HTML"
+category = "language"
+aliases = ["html5"]
+
+[[skill]]
+name = "CSS"
+category = "language"
+aliases = ["css3"]
+
+[[skill]]
+name = "Solidity"
+category = "language"
+
+[[skill]]
+name = "React"
+category = "framework"
+aliases = ["reactjs", "react.js"]
+
+[[skill]]
+name = "React Native"
+category = "framework"
+
+[[skill]]
+name = "Next.js"
+category = "framework"
+aliases = ["nextjs"]
+
+[[skill]]
+name = "Vue"
+category = "framework"
+aliases = ["vue.js", "vuejs"]
+
+[[skill]]
+name = "Angular"
+category = "framework"
+aliases = ["angularjs"]
+
+[[skill]]
+name = "Svelte"
+category = "framework"
+aliases = ["sveltekit"]
+
+[[skill]]
+name = "Node.js"
+category = "platform"
+aliases = ["nodejs"]
+
+[[skill]]
+name = "Express.js"
+category = "framework"
+aliases = ["expressjs"]
+
+[[skill]]
+name = "NestJS"
+category = "framework"
+
+[[skill]]
+name = "Django"
+category = "framework"
+
+[[skill]]
+name = "Flask"
+category = "framework"
+
+[[skill]]
+name = "FastAPI"
+category = "framework"
+
+[[skill]]
+name = "Spring"
+category = "framework"
+case_sensitive = true
+
+[[skill]]
+name = "Spring Boot"
+category = "framework"
+
+[[skill]]
+name = "Ruby on Rails"
+category = "framework"
+# Not "rails": in fintech postings it means payment rails ("fiat rails", "crypto rails").
+
+[[skill]]
+name = "Laravel"
+category = "framework"
+
+[[skill]]
+name = ".NET"
+category = "framework"
+aliases = ["dotnet", ".net core"]
+
+[[skill]]
+name = "ASP.NET"
+category = "framework"
+aliases = ["asp.net core"]
+
+[[skill]]
+name = "Flutter"
+category = "framework"
+
+[[skill]]
+name = "SwiftUI"
+category = "framework"
+
+[[skill]]
+name = "Jetpack Compose"
+category = "framework"
+
+[[skill]]
+name = "Redux"
+category = "library"
+
+[[skill]]
+name = "Tailwind CSS"
+category = "framework"
+aliases = ["tailwind", "tailwindcss"]
+
+[[skill]]
+name = "jQuery"
+category = "library"
+
+[[skill]]
+name = "PyTorch"
+category = "library"
+
+[[skill]]
+name = "TensorFlow"
+category = "library"
+
+[[skill]]
+name = "JAX"
+category = "library"
+
+[[skill]]
+name = "Keras"
+category = "library"
+
+[[skill]]
+name = "scikit-learn"
+category = "library"
+aliases = ["sklearn"]
+
+[[skill]]
+name = "pandas"
+category = "library"
+
+[[skill]]
+name = "NumPy"
+category = "library"
+
+[[skill]]
+name = "Hugging Face"
+category = "library"
+aliases = ["huggingface"]
+
+[[skill]]
+name = "LangChain"
+category = "library"
+
+[[skill]]
+name = "LlamaIndex"
+category = "library"
+
+[[skill]]
+name = "gRPC"
+category = "framework"
+
+[[skill]]
+name = "GraphQL"
+category = "tool"
+
+[[skill]]
+name = "Protocol Buffers"
+category = "tool"
+aliases = ["protobuf"]
+
+[[skill]]
+name = "Jest"
+category = "framework"
+
+[[skill]]
+name = "Playwright"
+category = "framework"
+
+[[skill]]
+name = "Cypress"
+category = "framework"
+
+[[skill]]
+name = "Selenium"
+category = "framework"
+
+[[skill]]
+name = "Webpack"
+category = "tool"
+
+[[skill]]
+name = "Vite"
+category = "tool"
+
+[[skill]]
+name = "AWS"
+category = "cloud"
+aliases = ["amazon web services"]
+
+[[skill]]
+name = "GCP"
+category = "cloud"
+aliases = ["google cloud", "google cloud platform"]
+
+[[skill]]
+name = "Azure"
+category = "cloud"
+aliases = ["microsoft azure"]
+
+[[skill]]
+name = "AWS Lambda"
+category = "cloud"
+
+[[skill]]
+name = "Cloudflare"
+category = "cloud"
+
+[[skill]]
+name = "Vercel"
+category = "cloud"
+
+[[skill]]
+name = "Heroku"
+category = "cloud"
+
+[[skill]]
+name = "Kubernetes"
+category = "platform"
+aliases = ["k8s"]
+
+[[skill]]
+name = "Docker"
+category = "tool"
+
+[[skill]]
+name = "Terraform"
+category = "tool"
+
+[[skill]]
+name = "Pulumi"
+category = "tool"
+
+[[skill]]
+name = "Ansible"
+category = "tool"
+
+[[skill]]
+name = "Helm"
+category = "tool"
+case_sensitive = true
+
+[[skill]]
+name = "Istio"
+category = "tool"
+
+[[skill]]
+name = "Envoy"
+category = "tool"
+case_sensitive = true
+
+[[skill]]
+name = "Nginx"
+category = "tool"
+
+[[skill]]
+name = "Linux"
+category = "platform"
+
+[[skill]]
+name = "Prometheus"
+category = "tool"
+
+[[skill]]
+name = "Grafana"
+category = "tool"
+
+[[skill]]
+name = "Datadog"
+category = "tool"
+
+[[skill]]
+name = "Splunk"
+category = "tool"
+
+[[skill]]
+name = "OpenTelemetry"
+category = "tool"
+aliases = ["otel"]
+
+[[skill]]
+name = "PagerDuty"
+category = "tool"
+
+[[skill]]
+name = "Jenkins"
+category = "tool"
+
+[[skill]]
+name = "GitHub Actions"
+category = "tool"
+
+[[skill]]
+name = "CircleCI"
+category = "tool"
+
+[[skill]]
+name = "Argo CD"
+category = "tool"
+aliases = ["argocd"]
+
+[[skill]]
+name = "Bazel"
+category = "tool"
+
+[[skill]]
+name = "WebAssembly"
+category = "platform"
+aliases = ["wasm"]
+
+[[skill]]
+name = "CUDA"
+category = "platform"
+
+[[skill]]
+name = "PostgreSQL"
+category = "database"
+aliases = ["postgres"]
+
+[[skill]]
+name = "MySQL"
+category = "database"
+
+[[skill]]
+name = "SQLite"
+category = "database"
+
+[[skill]]
+name = "MongoDB"
+category = "database"
+aliases = ["mongo"]
+
+[[skill]]
+name = "Redis"
+category = "database"
+
+[[skill]]
+name = "Cassandra"
+category = "database"
+
+[[skill]]
+name = "DynamoDB"
+category = "database"
+
+[[skill]]
+name = "Elasticsearch"
+category = "database"
+aliases = ["elastic search"]
+
+[[skill]]
+name = "ClickHouse"
+category = "database"
+
+[[skill]]
+name = "CockroachDB"
+category = "database"
+
+[[skill]]
+name = "Oracle Database"
+category = "database"
+aliases = ["oracle db"]
+
+[[skill]]
+name = "SQL Server"
+category = "database"
+aliases = ["mssql", "microsoft sql server"]
+
+[[skill]]
+name = "Snowflake"
+category = "database"
+
+[[skill]]
+name = "BigQuery"
+category = "database"
+
+[[skill]]
+name = "Redshift"
+category = "database"
+
+[[skill]]
+name = "Neo4j"
+category = "database"
+
+[[skill]]
+name = "pgvector"
+category = "database"
+
+[[skill]]
+name = "Pinecone"
+category = "database"
+
+[[skill]]
+name = "Memcached"
+category = "database"
+
+[[skill]]
+name = "Kafka"
+category = "platform"
+aliases = ["apache kafka"]
+
+[[skill]]
+name = "RabbitMQ"
+category = "tool"
+
+[[skill]]
+name = "Spark"
+category = "platform"
+aliases = ["apache spark", "pyspark"]
+case_sensitive = true
+
+[[skill]]
+name = "Flink"
+category = "platform"
+aliases = ["apache flink"]
+
+[[skill]]
+name = "Hadoop"
+category = "platform"
+
+[[skill]]
+name = "Databricks"
+category = "platform"
+
+[[skill]]
+name = "Airflow"
+category = "tool"
+aliases = ["apache airflow"]
+
+[[skill]]
+name = "dbt"
+category = "tool"
+
+[[skill]]
+name = "MLflow"
+category = "tool"
+
+[[skill]]
+name = "Git"
+category = "tool"
+
+[[skill]]
+name = "GitHub"
+category = "tool"
+
+[[skill]]
+name = "GitLab"
+category = "tool"
+
+[[skill]]
+name = "Jira"
+category = "tool"
+
+[[skill]]
+name = "Figma"
+category = "tool"
+
+[[skill]]
+name = "Tableau"
+category = "tool"
+
+[[skill]]
+name = "Looker"
+category = "tool"
+
+[[skill]]
+name = "Power BI"
+category = "tool"
+aliases = ["powerbi"]
+
+[[skill]]
+name = "GitHub Copilot"
+category = "tool"
+
+[[skill]]
+name = "Cursor"
+category = "tool"
+case_sensitive = true
+
+[[skill]]
+name = "CI/CD"
+category = "practice"
+aliases = ["continuous integration", "continuous delivery", "continuous deployment"]
+
+[[skill]]
+name = "DevOps"
+category = "practice"
+
+[[skill]]
+name = "SRE"
+category = "practice"
+aliases = ["site reliability engineering"]
+
+[[skill]]
+name = "Agile"
+category = "practice"
+case_sensitive = true
+
+[[skill]]
+name = "Scrum"
+category = "practice"
+
+[[skill]]
+name = "TDD"
+category = "practice"
+aliases = ["test-driven development", "test driven development"]
+
+[[skill]]
+name = "Microservices"
+category = "practice"
+aliases = ["microservice", "micro-services"]
+
+[[skill]]
+name = "Distributed Systems"
+category = "practice"
+aliases = ["distributed system"]
+
+[[skill]]
+name = "Infrastructure as Code"
+category = "practice"
+aliases = ["iac", "infrastructure-as-code"]
+
+[[skill]]
+name = "Observability"
+category = "practice"
+
+[[skill]]
+name = "ETL"
+category = "practice"
+aliases = ["elt"]
+
+[[skill]]
+name = "Data Modeling"
+category = "practice"
+aliases = ["data modelling"]
+
+[[skill]]
+name = "A/B Testing"
+category = "practice"
+aliases = ["a/b test", "a/b tests", "split testing"]
+
+[[skill]]
+name = "REST"
+category = "practice"
+aliases = ["restful"]
+case_sensitive = true
+
+[[skill]]
+name = "Machine Learning"
+category = "practice"
+aliases = ["ML"]
+
+[[skill]]
+name = "Deep Learning"
+category = "practice"
+
+[[skill]]
+name = "NLP"
+category = "practice"
+aliases = ["natural language processing"]
+
+[[skill]]
+name = "Computer Vision"
+category = "practice"
+
+[[skill]]
+name = "LLMs"
+category = "practice"
+aliases = ["llm", "large language model", "large language models"]
+
+[[skill]]
+name = "AI Agents"
+category = "practice"
+aliases = ["ai agent", "agentic", "agentic ai"]
+
+[[skill]]
+name = "RAG"
+category = "practice"
+aliases = ["retrieval-augmented generation", "retrieval augmented generation"]
+
+[[skill]]
+name = "MLOps"
+category = "practice"
