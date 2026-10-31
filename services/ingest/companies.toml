@@ -12,3 +12,25 @@ slug = "stripe"
 ats = "greenhouse"
 token = "stripe"
 hq_country = "US"
+
+[[company]]
+name = "Wealthsimple"
+slug = "wealthsimple"
+ats = "ashby"
+token = "wealthsimple"
+hq_country = "CA"
+
+[[company]]
+name = "Cohere"
+slug = "cohere"
+ats = "ashby"
+token = "cohere"
+hq_country = "CA"
+
+[[company]]
+name = "Neo Financial"
+slug = "neo-financial"
+ats = "ashby"
+# "neo-financial" is an empty board; the live one is "neofinancial".
+token = "neofinancial"
+hq_country = "CA"

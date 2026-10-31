@@ -4,24 +4,29 @@ Everything runs in one transaction, so a failed run leaves jobs as they were.
 Run with: uv run python -m radar_ingest.normalize_run
 """
 
+from datetime import datetime
+
 from radar_ingest.db import connect
-from radar_ingest.normalize.greenhouse import SOURCE, NormalizedJob, normalize
+from radar_ingest.normalize.job import NormalizedJob
 from radar_ingest.normalize.locations import Location
+from radar_ingest.sources import SOURCES
 
 # New postings, and postings whose payload changed after we last normalized them.
 SELECT_CHANGED = """
-    select r.company_id, r.payload, r.last_seen_at, c.hq_country
+    select r.source, r.company_id, r.payload, r.last_seen_at, c.hq_country
     from raw_postings r
     join companies c on c.id = r.company_id
     left join jobs j on j.source = r.source and j.source_id = r.source_id
-    where r.source = %s and (j.id is null or r.changed_at > j.updated_at)
+    where r.source = any(%s) and (j.id is null or r.changed_at > j.updated_at)
 """
 
 # first_seen_at is set once; a posting that comes back after closing is open again.
 UPSERT_JOB = """
     insert into jobs (company_id, source, source_id, title, url, description_text,
-                      location_raw, workplace_type, posted_at, first_seen_at, last_seen_at)
-    values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                      location_raw, workplace_type, posted_at,
+                      salary_min, salary_max, salary_currency, salary_period, salary_source,
+                      first_seen_at, last_seen_at)
+    values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     on conflict (source, source_id) do update set
       title            = excluded.title,
       url              = excluded.url,
@@ -29,6 +34,11 @@ UPSERT_JOB = """
       location_raw     = excluded.location_raw,
       workplace_type   = excluded.workplace_type,
       posted_at        = excluded.posted_at,
+      salary_min       = excluded.salary_min,
+      salary_max       = excluded.salary_max,
+      salary_currency  = excluded.salary_currency,
+      salary_period    = excluded.salary_period,
+      salary_source    = excluded.salary_source,
       last_seen_at     = excluded.last_seen_at,
       closed_at        = null,
       updated_at       = now()
@@ -72,23 +82,38 @@ def job_locations(job: NormalizedJob, hq_country: str | None) -> tuple[list[Loca
     return job.locations, False
 
 
+def job_row(company_id: int, j: NormalizedJob, seen: datetime) -> tuple[object, ...]:
+    """Parameters for UPSERT_JOB, in its column order."""
+    s = j.salary
+    salary = (
+        (s.minimum, s.maximum, s.currency, s.period, s.source) if s else (None,) * 4 + ("none",)
+    )
+    return (
+        (company_id, j.source, j.source_id, j.title, j.url, j.description_text)
+        + (j.location_raw, j.workplace_type, j.posted_at)
+        + salary
+        + (seen, seen)
+    )
+
+
 def main() -> None:
     with connect() as conn, conn.cursor() as cur:
-        rows = cur.execute(SELECT_CHANGED, (SOURCE,)).fetchall()
+        rows = cur.execute(SELECT_CHANGED, (list(SOURCES),)).fetchall()
         jobs = [
-            (company_id, normalize(payload), seen, hq) for company_id, payload, seen, hq in rows
+            (company_id, SOURCES[source].normalize(payload), seen, hq)
+            for source, company_id, payload, seen, hq in rows
         ]
 
         location_rows = []
         if jobs:
-            job_params = [
-                (company_id, j.source, j.source_id, j.title, j.url, j.description_text)
-                + (j.location_raw, j.workplace_type, j.posted_at, seen, seen)
-                for company_id, j, seen, _ in jobs
-            ]
+            job_params = [job_row(company_id, j, seen) for company_id, j, seen, _ in jobs]
             # returning=True gives one result set per row, in the order of job_params.
             cur.executemany(UPSERT_JOB, job_params, returning=True)
-            job_ids = [result.fetchone()[0] for result in cur.results()]  # type: ignore[index]
+            job_ids = []
+            for result in cur.results():
+                row = result.fetchone()
+                assert row is not None  # every upsert returns its id
+                job_ids.append(row[0])
 
             cur.execute(DELETE_LOCATIONS, (job_ids,))
             for job_id, (_, job, _, hq) in zip(job_ids, jobs, strict=True):

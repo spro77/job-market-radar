@@ -71,9 +71,27 @@ CITIES: dict[str, Location] = {
 COUNTRIES: dict[str, str] = {
     alias: code
     for code, aliases in {
-        "US": ("us", "usa", "united states"),
+        # Full names only: two-letter aliases such as "nl" would shadow province codes.
+        "US": ("us", "usa", "united states", "united states of america"),
         "CA": ("canada",),
-        "GB": ("uk", "united kingdom"),
+        "GB": ("uk", "united kingdom", "great britain", "england", "scotland"),
+        "NL": ("netherlands", "the netherlands"),
+        "CH": ("switzerland",),
+        "PT": ("portugal",),
+        "IT": ("italy",),
+        "DK": ("denmark",),
+        "NO": ("norway",),
+        "FI": ("finland",),
+        "AT": ("austria",),
+        "CZ": ("czech republic", "czechia"),
+        "KR": ("south korea", "korea", "republic of korea"),
+        "SG": ("singapore",),
+        "HK": ("hong kong",),
+        "NZ": ("new zealand",),
+        "AR": ("argentina",),
+        "CO": ("colombia",),
+        "CL": ("chile",),
+        "AE": ("united arab emirates", "uae"),
         "IE": ("ireland",),
         "IN": ("india",),
         "MX": ("mexico", "mx"),
@@ -213,3 +231,38 @@ def parse_location(text: str) -> list[Location]:
             places.append(options[0])
     places = [p for p in places if not any(covers(other, p) for other in places)]
     return list(dict.fromkeys(places))  # drop duplicates, keep order
+
+
+def country_code(name: str) -> str | None:
+    """ISO code for a country name or code: "USA", "United States" and "US" give "US"."""
+    name = name.strip()
+    if len(name) == 2 and name.isalpha():
+        return name.upper()
+    return COUNTRIES.get(name.lower())
+
+
+def from_address(locality: str, region: str, country: str) -> Location | None:
+    """A Location from structured address fields; None if not even the country is known.
+
+    Regions are kept only for the US and Canada, as codes: "New York" gives "NY".
+    """
+    code = country_code(country)
+    # In an address field "New York" is the state; REGION_NAMES leaves it to the city.
+    region_location = REGION_NAMES.get(region.strip().lower()) or (
+        Location("US", "NY") if region.strip().lower() == "new york" else None
+    )
+    if code is None and region_location:
+        code = region_location.country  # "Ontario" with no country is still Canada
+    if code is None:
+        return None
+    if region_location and region_location.country == code:
+        region_code = region_location.region
+    elif code in ("US", "CA") and region.strip().upper() in (US_STATES | CA_PROVINCES):
+        region_code = region.strip().upper()
+    else:
+        region_code = None
+    city = locality.strip() or None
+    known = CITIES.get(city.lower()) if city else None
+    if known and known.country == code:
+        return known  # canonical name and region: "New York City" -> New York, NY
+    return Location(code, region_code, city)

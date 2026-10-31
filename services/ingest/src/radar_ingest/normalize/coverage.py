@@ -1,5 +1,6 @@
-"""How well parse_location() reads the locations in raw_postings: shares and what it misses.
+"""How well parse_location() reads Greenhouse locations: shares and what it misses.
 
+Only Greenhouse gives locations as free text; Ashby addresses are structured.
 Read-only. Run with: uv run python -m radar_ingest.normalize.coverage
 """
 
@@ -11,6 +12,7 @@ from radar_ingest.normalize.locations import parse_location, resolve, split_part
 QUERY = """
     select coalesce(payload->'location'->>'name', ''), count(*)
     from raw_postings
+    where source = 'greenhouse'
     group by 1
 """
 TOP = 15

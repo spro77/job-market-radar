@@ -1,4 +1,4 @@
-"""Fetch Greenhouse job boards into raw_postings.
+"""Fetch job boards (every source in SOURCES) into raw_postings.
 
 Each company gets a fetch_runs row that is committed before the download starts,
 so a crash still leaves a record of the attempt. Every company uses its own
@@ -16,9 +16,9 @@ import httpx
 from psycopg.types.json import Jsonb
 
 from radar_ingest.db import connect
+from radar_ingest.sources import SOURCES
+from radar_ingest.sources.base import Source
 
-SOURCE = "greenhouse"
-BOARD_URL = "https://boards-api.greenhouse.io/v1/boards/{token}/jobs"
 USER_AGENT = "job-market-radar/0.1 (+https://github.com/spro77/job-market-radar)"
 # ADR 0005: at most about one request per second per host.
 REQUEST_INTERVAL_S = 1.0
@@ -43,10 +43,10 @@ def payload_hash(job: dict[str, Any]) -> str:
     return hashlib.sha256(json.dumps(job, sort_keys=True).encode()).hexdigest()
 
 
-def fetch_board(client: httpx.Client, token: str) -> list[dict[str, Any]]:
-    response = client.get(BOARD_URL.format(token=token), params={"content": "true"})
+def fetch_board(client: httpx.Client, source: Source, token: str) -> list[dict[str, Any]]:
+    response = client.get(source.board_url(token))
     response.raise_for_status()
-    return response.json()["jobs"]
+    return source.parse_board(response.json())
 
 
 def close_abandoned_runs() -> int:
@@ -85,11 +85,16 @@ def start_run(company_id: int) -> tuple[int, datetime]:
 
 
 def fetch_company(
-    client: httpx.Client, company_id: int, token: str, run_id: int, started_at: datetime
+    client: httpx.Client,
+    ats: str,
+    company_id: int,
+    token: str,
+    run_id: int,
+    started_at: datetime,
 ) -> tuple[int, int]:
     """Fetch one board on its own connection. Returns (jobs seen, jobs new or changed)."""
-    jobs = fetch_board(client, token)
-    rows = [(SOURCE, str(job["id"]), company_id, Jsonb(job), payload_hash(job)) for job in jobs]
+    jobs = fetch_board(client, SOURCES[ats], token)
+    rows = [(ats, str(job["id"]), company_id, Jsonb(job), payload_hash(job)) for job in jobs]
     with connect() as conn, conn.cursor() as cur:
         cur.executemany(UPSERT_POSTING, rows)
         cur.execute(
@@ -112,13 +117,14 @@ def main() -> None:
 
     with connect() as conn:
         companies = conn.execute(
-            "select id, slug, ats_token from companies where is_active and ats = %s order by id",
-            (SOURCE,),
+            "select id, slug, ats, ats_token from companies"
+            " where is_active and ats = any(%s) order by id",
+            (list(SOURCES),),
         ).fetchall()
 
     failed = 0
     with httpx.Client(timeout=30.0, headers={"User-Agent": USER_AGENT}) as client:
-        for i, (company_id, slug, token) in enumerate(companies):
+        for i, (company_id, slug, ats, token) in enumerate(companies):
             if i:
                 time.sleep(REQUEST_INTERVAL_S)
             try:
@@ -128,7 +134,7 @@ def main() -> None:
                 print(f"{slug}: could not start a run: {e!r}")
                 continue
             try:
-                seen, changed = fetch_company(client, company_id, token, run_id, started_at)
+                seen, changed = fetch_company(client, ats, company_id, token, run_id, started_at)
                 print(f"{slug}: {seen} jobs, {changed} new or changed")
             except Exception as e:
                 failed += 1

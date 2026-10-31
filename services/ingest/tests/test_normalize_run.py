@@ -1,6 +1,6 @@
 import pytest
 
-from radar_ingest.normalize.greenhouse import NormalizedJob
+from radar_ingest.normalize.job import NormalizedJob
 from radar_ingest.normalize.locations import Location
 from radar_ingest.normalize_run import job_locations
 
@@ -8,7 +8,7 @@ TORONTO = Location("CA", "ON", "Toronto")
 
 
 def job(locations: list[Location], workplace: str) -> NormalizedJob:
-    return NormalizedJob("1", "Engineer", None, "", None, workplace, None, locations)
+    return NormalizedJob("ashby", "1", "Engineer", None, "", None, workplace, None, locations)
 
 
 @pytest.mark.parametrize(

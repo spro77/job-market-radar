@@ -6,8 +6,8 @@ from typing import Any
 
 import pytest
 
-from radar_ingest.normalize.greenhouse import html_to_text, normalize, workplace_type
 from radar_ingest.normalize.locations import Location
+from radar_ingest.sources.greenhouse import html_to_text, normalize, workplace_type
 
 FIXTURES = Path(__file__).parent / "fixtures" / "greenhouse"
 
