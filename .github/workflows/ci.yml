@@ -31,12 +31,29 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
+        env:
+          # The Function App's default domain (Azure → Overview); hardcoded until it changes.
+          VITE_API_URL: https://func-job-market-radar-dffahbghfxbrcgf0.westus2-01.azurewebsites.net/api
 
       - uses: actions/upload-artifact@v4
         if: github.event_name == 'push'
         with:
           name: web-dist
           path: apps/web/dist
+          if-no-files-found: error
+
+      # The Functions package: dist, host.json, package.json and production dependencies.
+      # Functions does not follow pnpm's symlinks, so node_modules is hoisted (real folders);
+      # "files" in apps/api/package.json keeps local.settings.json out.
+      - name: Package API
+        if: github.event_name == 'push'
+        run: pnpm --config.node-linker=hoisted --filter @radar/api deploy --prod api-package
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'push'
+        with:
+          name: api-package
+          path: api-package
           if-no-files-found: error
 
   ingest:
@@ -74,3 +91,24 @@ jobs:
           app_location: dist
           skip_app_build: true
           skip_api_build: true
+
+  deploy-api:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: api-package
+          path: api-package
+
+      # Publish profile auth on Flex Consumption needs sku and SCM basic auth enabled on the app.
+      # The package is built already, so no remote build.
+      - uses: Azure/functions-action@v1
+        with:
+          app-name: func-job-market-radar
+          package: api-package
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          sku: flexconsumption
