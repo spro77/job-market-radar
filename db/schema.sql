@@ -1,6 +1,6 @@
 \restrict dbmate
 
--- Dumped from database version 18.6 (fd34222)
+-- Dumped from database version 18.6 (4e5fd08)
 -- Dumped by pg_dump version 18.6
 
 SET statement_timeout = 0;
@@ -90,7 +90,8 @@ CREATE TABLE public.job_locations (
     country character(2),
     region text,
     city text,
-    is_primary boolean DEFAULT false NOT NULL
+    is_primary boolean DEFAULT false NOT NULL,
+    inferred boolean DEFAULT false NOT NULL
 );
 
 
@@ -131,6 +132,7 @@ CREATE TABLE public.jobs (
     first_seen_at timestamp with time zone NOT NULL,
     last_seen_at timestamp with time zone NOT NULL,
     closed_at timestamp with time zone,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT jobs_check CHECK ((salary_min <= salary_max)),
     CONSTRAINT jobs_check1 CHECK (((salary_source <> 'none'::text) OR ((salary_min IS NULL) AND (salary_max IS NULL)))),
     CONSTRAINT jobs_salary_min_check CHECK ((salary_min >= (0)::numeric)),
@@ -337,4 +339,5 @@ ALTER TABLE ONLY public.raw_postings
 
 INSERT INTO public.schema_migrations (version) VALUES
     ('20261029013941'),
-    ('20261029040819');
+    ('20261029040819'),
+    ('20261031043512');
