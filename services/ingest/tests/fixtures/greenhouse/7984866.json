@@ -1,0 +1,50 @@
+{
+  "id": 7984866,
+  "title": "Product Manager, Ecosystem Risk",
+  "content": "&lt;h2&gt;Who we are&lt;/h2&gt;\n&lt;h3&gt;About Stripe&lt;/h3&gt;\n&lt;p&gt;Stripe is a financial infrastructure platform for businesses. Millions of companies — from the world&#39;s largest enterprises to the most ambitious startups — use Stripe to accept payments, grow their revenue, and accelerate new business opportunities. Our mission is to increase the GDP of the internet, and we have a staggering amount of work ahead. That means you have an unprecedented opportunity to put the global economy within everyone&#39;s reach while doing the most important work of your career.&lt;/p&gt;\n&lt;h3&gt;About the team&lt;/h3&gt;\n&lt;p&gt;The Ecosystem Risk Product Management team sits at the intersection of growth and protection. Our focus is twofold. We enable online businesses—including those in emerging and regulated industries—to start and grow on Stripe, while protecting consumers, merchants, and partners from financial crimes. We build financial infrastructure at scale that powers every transaction on Stripe, deliver merchant-facing UI and API experiences, and develop AI-driven solutions to some of the hardest and most exciting challenges in the digital economy.&lt;/p&gt;\n&lt;h2&gt;What you&#39;ll do&lt;/h2&gt;\n&lt;h3&gt;Responsibilities&lt;/h3&gt;\n&lt;ul&gt;\n&lt;li&gt;Own the vision and multi-year roadmap for AI-powered financial crimes controls—spanning detection, investigation, information collection, and the UI and API surfaces that tie them together.&lt;/li&gt;\n&lt;li&gt;Build core infrastructure that underpins Stripe&#39;s growing suite of products and services. • Develop investigator tools that power accurate case reviews using the best of AI and human expertise.&lt;/li&gt;\n&lt;li&gt;Drive cross-functional execution by partnering closely with engineering, operations, design, data science, go-to-market, legal, and product teams across Stripe.&lt;/li&gt;\n&lt;li&gt;Define and own success metrics, navigate complex trade-offs, drive prioritization, and measure outcomes with rigor to demonstrate impact.&lt;/li&gt;\n&lt;li&gt;Align leadership and stakeholders by synthesizing input from across the organization and external sources, and communicating a clear point of view to peers and executives.&lt;/li&gt;\n&lt;li&gt;Monitor the external landscape—regulatory trends, emerging technologies, and competitive offerings—to inform strategy and identify opportunities.&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h2&gt;Who you are&lt;/h2&gt;\n&lt;h3&gt;Minimum requirements&lt;/h3&gt;\n&lt;ul&gt;\n&lt;li&gt;7+ years in Product Management&lt;/li&gt;\n&lt;li&gt;Proven experience building infrastructure and user experiences at scale&lt;/li&gt;\n&lt;li&gt;Track record of operating effectively in highly cross-functional environments&lt;/li&gt;\n&lt;li&gt;Excellent analytical, problem-solving, and decision-making skills&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h3&gt;Preferred qualifications&lt;/h3&gt;\n&lt;ul&gt;\n&lt;li&gt;Experience in financial crimes or fraud prevention within financial services&lt;/li&gt;\n&lt;/ul&gt;",
+  "offices": [
+    {
+      "id": 87006,
+      "name": "Canada Locations",
+      "location": null,
+      "child_ids": [
+        93355, 212396, 243441, 264677, 83765, 83863, 80164, 80439, 83762, 83763, 83766, 83764
+      ],
+      "parent_id": 673
+    }
+  ],
+  "language": "en",
+  "location": {
+    "name": "Toronto"
+  },
+  "metadata": null,
+  "education": "education_required",
+  "updated_at": "2026-10-22T09:15:16-04:00",
+  "departments": [
+    {
+      "id": 83108,
+      "name": "8260 Risk and Compliance Platform PM",
+      "child_ids": [],
+      "parent_id": 150328
+    }
+  ],
+  "absolute_url": "https://stripe.com/jobs/search?gh_jid=7984866",
+  "company_name": "Stripe",
+  "ai_disclaimer": null,
+  "requisition_id": "See Opening ID",
+  "data_compliance": [
+    {
+      "type": "gdpr",
+      "requires_consent": false,
+      "retention_period": null,
+      "requires_retention_consent": false,
+      "requires_processing_consent": false,
+      "demographic_data_consent_applies": false
+    }
+  ],
+  "first_published": "2026-06-11T09:20:38-04:00",
+  "internal_job_id": 3465046,
+  "application_deadline": null,
+  "include_ai_disclaimer": false,
+  "ai_opt_out_request_url": "http://app.greenhouse.io/ai_opt_out_request/job_post/7984866/ai_opt_out"
+}
