@@ -2,7 +2,11 @@
 
 A daily read on the tech job market in Canada and the US: which skills employers ask for, what they pay and who is hiring.
 
-> **Status:** early development. A live demo will be linked here.
+**Live demo:** [gray-dune-05ab7de10.1.azurestaticapps.net](https://gray-dune-05ab7de10.1.azurestaticapps.net/)
+
+> **Status:** early development. The Overview screen is live with real data from four companies; Skills and Salaries come next.
+
+[![Overview: open jobs, remote share, median salary in CAD and USD, companies hiring, and the top skills by share of open jobs](docs/images/overview.png)](https://gray-dune-05ab7de10.1.azurestaticapps.net/)
 
 ## What it shows
 
