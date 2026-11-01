@@ -27,7 +27,8 @@ Job Market Radar: dashboards of the tech job market in Canada and the US, built 
 
 Run from the repository root:
 
-- `pnpm dev` · `pnpm build` · `pnpm typecheck` · `pnpm lint` — through Turborepo.
+- `pnpm dev` · `pnpm build` · `pnpm typecheck` · `pnpm lint` · `pnpm test` — through Turborepo. Tests are Vitest + Testing Library (jsdom) in `apps/web` and `packages/ui`.
+- Web locally: `apps/web/.env.local` holds `VITE_API_URL=http://localhost:7071/api` (git-ignored); run the API with `pnpm --filter @radar/api dev` beside it.
 - `pnpm check` — Biome format and lint check; run before committing.
 - `pnpm --filter @radar/web <script>` — run a script in one package.
 - `pnpm db:new <name>` · `pnpm db:up` · `pnpm db:rollback` · `pnpm db:status` — dbmate migrations, using `DATABASE_URL` from `.env`.

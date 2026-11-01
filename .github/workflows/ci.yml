@@ -30,6 +30,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - run: pnpm test
       - run: pnpm build
         env:
           # The Function App's default domain (Azure → Overview); hardcoded until it changes.

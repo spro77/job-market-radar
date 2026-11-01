@@ -1,0 +1,73 @@
+/*
+ * Tailwind theme over tokens.css (ADR 0008). Import after tailwindcss and tokens.css.
+ *
+ * Colors: Tailwind's palette is dropped, so a raw color class (bg-red-500) does not exist;
+ * every color utility points at a token: bg-surface, text-ink-muted, border-border, bg-chart-3.
+ * inline makes a utility use var(--surface) itself, so data-theme="light" switches it.
+ *
+ * Fonts and radii need no mapping: tokens.css defines --font-mono, --radius-md and the rest
+ * under the names Tailwind's theme uses, and as unlayered CSS it wins over Tailwind's
+ * defaults (which live in @layer theme). So font-mono and rounded-md read the tokens.
+ * Spacing: Tailwind's 4px step already matches the token scale (p-5 = --space-5 = 20px).
+ */
+@source ".";
+
+@theme inline {
+  --color-*: initial;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-focus-ring: var(--focus-ring);
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-negative: var(--negative);
+  --color-negative-soft: var(--negative-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-axis: var(--chart-axis);
+
+  /* font-display / font-text utilities; font-mono already exists. */
+  --font-display: var(--font-display);
+  --font-text: var(--font-text);
+}
+
+/* The signature: in the dark theme lines and bars glow in their own color. Light stays flat. */
+@utility glow {
+  :root:not([data-theme="light"]) & {
+    filter: drop-shadow(0 0 6px color-mix(in srgb, currentColor 55%, transparent));
+  }
+}
+
+/* ChartFrame's loading bars. */
+@utility skeleton {
+  background: linear-gradient(90deg, var(--surface-raised), var(--border), var(--surface-raised));
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
