@@ -2,7 +2,10 @@
 
 The daily workflow appends it to $GITHUB_STEP_SUMMARY, so the run page shows the health of
 the data without reading logs. --since is when the run started; everything after it counts.
-Run with: uv run python -m radar_ingest.run_summary --since 2026-11-01T11:17:00Z
+Take it from --start, which prints the database's clock: the rows are stamped by the
+database's now(), and a runner whose clock is a few seconds ahead would drop them.
+Run with: uv run python -m radar_ingest.run_summary --start   (before the run)
+          uv run python -m radar_ingest.run_summary --since <what --start printed>
 """
 
 import argparse
@@ -100,14 +103,23 @@ def render(s: Summary) -> str:
     return "\n".join(lines) + "\n"
 
 
+def database_now(cur: Cursor) -> datetime:
+    row = cur.execute("select now()").fetchone()
+    assert row is not None
+    return row[0]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument(
-        "--since", type=datetime.fromisoformat, required=True, help="run start, ISO 8601"
-    )
+    when = parser.add_mutually_exclusive_group(required=True)
+    when.add_argument("--start", action="store_true", help="print the database's time and exit")
+    when.add_argument("--since", type=datetime.fromisoformat, help="run start, ISO 8601")
     args = parser.parse_args()
-    since = args.since if args.since.tzinfo else args.since.replace(tzinfo=UTC)
     with connect() as conn, conn.cursor() as cur:
+        if args.start:
+            print(database_now(cur).isoformat())
+            return
+        since = args.since if args.since.tzinfo else args.since.replace(tzinfo=UTC)
         print(render(collect(cur, since)), end="")
 
 

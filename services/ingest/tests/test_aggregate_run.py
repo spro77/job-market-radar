@@ -17,7 +17,7 @@ from dotenv import find_dotenv, load_dotenv
 
 from radar_ingest.aggregate_run import TABLES, aggregate
 from radar_ingest.db import missing_tables
-from radar_ingest.run_summary import collect
+from radar_ingest.run_summary import collect, database_now
 
 MIGRATIONS = Path(__file__).resolve().parents[3] / "db" / "migrations"
 DAY = date(2026, 10, 31)
@@ -143,3 +143,9 @@ def test_run_summary_reads_the_same_data(cur: psycopg.Cursor) -> None:
     summary = collect(cur, datetime(2026, 10, 1, tzinfo=UTC))
     assert [(f.slug, f.status) for f in summary.fetches] == [("acme", None), ("globex", None)]
     assert summary.open_jobs == 5
+
+
+def test_database_now_round_trips_through_since(cur: psycopg.Cursor) -> None:
+    started = database_now(cur)
+    assert started.tzinfo is not None
+    assert datetime.fromisoformat(started.isoformat()) == started

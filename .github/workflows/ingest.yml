@@ -33,8 +33,12 @@ jobs:
       - uses: astral-sh/setup-uv@v7
       - run: uv sync --locked
 
+      # The database's clock, not the runner's: the rows the summary counts are stamped by now().
       - name: Note the start time for the summary
-        run: echo "RUN_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+        # A plain assignment, so a failed query fails the step (inside echo it would not).
+        run: |
+          started=$(uv run python -m radar_ingest.run_summary --start)
+          echo "RUN_STARTED_AT=$started" >> "$GITHUB_ENV"
 
       - run: uv run python -m radar_ingest.seed
 
