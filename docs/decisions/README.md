@@ -20,6 +20,7 @@ Each record captures one decision: the context, what we chose, what we rejected 
 | 0014 | [One adapter module per job board source](0014-source-adapters.md)                                | Accepted |
 | 0015 | [Dictionary skill extraction first, with known limits](0015-dictionary-skill-extraction.md)       | Accepted |
 | 0016 | [What the aggregates mean: salary currency and remote share](0016-aggregate-data-meaning.md)      | Accepted |
+| 0017 | [Run the daily ingest on a GitHub Actions schedule](0017-daily-ingest-on-github-actions.md)       | Accepted |
 
 ## Template
 

@@ -15,7 +15,7 @@ from datetime import time as dtime
 
 from psycopg import Cursor
 
-from radar_ingest.db import connect
+from radar_ingest.db import connect, missing_tables
 
 METHOD = "dictionary"  # which extractor's skills feed the dashboards
 
@@ -137,6 +137,7 @@ SALARY = f"""{INSERT}
 """
 
 METRICS = (OPEN_JOBS, REMOTE_SHARE, SKILL_SHARE, SKILL_COMPANIES, SALARY)
+TABLES = ("companies", "jobs", "job_locations", "skills", "job_skills", "daily_aggregates")
 
 
 def aggregate(cur: Cursor, day: date) -> int:
@@ -166,6 +167,12 @@ def main() -> None:
 
     started = time.monotonic()
     with connect() as conn, conn.cursor() as cur:
+        # Migrations are applied by hand when a schema change ships, never by the daily run.
+        missing = missing_tables(cur, *TABLES)
+        if missing:
+            raise SystemExit(
+                f"missing tables: {', '.join(missing)}. Apply the migrations first: pnpm db:up"
+            )
         rows = aggregate(cur, day)
         counts = cur.execute(
             "select metric, count(*) from daily_aggregates where day = %s group by 1 order by 1",

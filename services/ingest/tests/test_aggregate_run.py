@@ -7,7 +7,7 @@ Skipped when TEST_DATABASE_URL is not set, so CI without the secret stays green.
 
 import os
 from collections.abc import Iterator
-from datetime import date
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -15,7 +15,9 @@ import psycopg
 import pytest
 from dotenv import find_dotenv, load_dotenv
 
-from radar_ingest.aggregate_run import aggregate
+from radar_ingest.aggregate_run import TABLES, aggregate
+from radar_ingest.db import missing_tables
+from radar_ingest.run_summary import collect
 
 MIGRATIONS = Path(__file__).resolve().parents[3] / "db" / "migrations"
 DAY = date(2026, 10, 31)
@@ -130,3 +132,14 @@ def test_rerun_gives_the_same_rows(cur: psycopg.Cursor) -> None:
     before = cur.execute(query).fetchall()
     aggregate(cur, DAY)
     assert cur.execute(query).fetchall() == before
+
+
+def test_missing_tables_names_only_absent_ones(cur: psycopg.Cursor) -> None:
+    assert missing_tables(cur, *TABLES) == []
+    assert missing_tables(cur, "jobs", "no_such_table") == ["no_such_table"]
+
+
+def test_run_summary_reads_the_same_data(cur: psycopg.Cursor) -> None:
+    summary = collect(cur, datetime(2026, 10, 1, tzinfo=UTC))
+    assert [(f.slug, f.status) for f in summary.fetches] == [("acme", None), ("globex", None)]
+    assert summary.open_jobs == 5

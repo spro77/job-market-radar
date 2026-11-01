@@ -1,0 +1,60 @@
+name: Daily ingest
+
+# fetch → normalize → skills → aggregates, every morning (ADR 0017). Migrations are not part
+# of it: a schema change is applied by hand (pnpm db:up) when the code that needs it ships.
+
+on:
+  schedule:
+    # 11:17 UTC ≈ 05:17 in Calgary, after the boards' overnight updates. Not :00, when
+    # GitHub's scheduler is busiest and runs start later.
+    - cron: "17 11 * * *"
+  workflow_dispatch: # "Run workflow" button, for a manual run
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false # two runs at once are worse than one late run
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    defaults:
+      run:
+        working-directory: services/ingest
+    env:
+      # Neon's direct URL, not -pooler: one long connection with long transactions.
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --locked
+
+      - name: Note the start time for the summary
+        run: echo "RUN_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
+      - run: uv run python -m radar_ingest.seed
+
+      # One failed board must not stop the others from being normalized: jobs of a company
+      # whose fetch failed stay open, because closing uses its last successful fetch. The
+      # failure still turns the run red in the last step.
+      - id: fetch
+        run: uv run python -m radar_ingest.fetch
+        continue-on-error: true
+
+      - run: uv run python -m radar_ingest.normalize_run
+      - run: uv run python -m radar_ingest.skills_run
+      - run: uv run python -m radar_ingest.aggregate_run
+
+      - name: Summary
+        if: always()
+        run: uv run python -m radar_ingest.run_summary --since "$RUN_STARTED_AT" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail the run if a board failed
+        if: steps.fetch.outcome == 'failure'
+        run: |
+          echo "::error::Some boards failed to fetch; see the fetch step and the summary."
+          exit 1

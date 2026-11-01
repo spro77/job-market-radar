@@ -34,6 +34,7 @@ Run from the repository root:
 - `pnpm db:new <name>` · `pnpm db:up` · `pnpm db:rollback` · `pnpm db:status` — dbmate migrations, using `DATABASE_URL` from `.env`.
 - `pnpm --filter @radar/api db:types` — regenerate `apps/api/src/db/types.ts` from the database. **Run it after every migration** and commit the file: CI builds without a database.
 - `pnpm --filter @radar/api dev` — build and run the API on `localhost:7071` (needs Azure Functions Core Tools, `func`).
+- Daily data: `.github/workflows/ingest.yml` runs seed → fetch → normalize_run → skills_run → aggregate_run at 11:17 UTC and on demand (`gh workflow run ingest.yml`); see ADR 0017.
 - In `services/ingest`: `uv run python -m radar_ingest.check` · `uv run ruff check` · `uv run ruff format` · `uv run pytest`.
 
 ## Conventions

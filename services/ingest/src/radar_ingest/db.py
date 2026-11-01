@@ -18,3 +18,12 @@ def connect() -> psycopg.Connection:
             "and fill in the Neon connection string."
         )
     return psycopg.connect(url)
+
+
+def missing_tables(cur: psycopg.Cursor, *names: str) -> list[str]:
+    """The tables among names that do not exist in the connection's search path."""
+    rows = cur.execute(
+        "select name from unnest(%s::text[]) as name where to_regclass(name) is null",
+        (list(names),),
+    ).fetchall()
+    return [name for (name,) in rows]
